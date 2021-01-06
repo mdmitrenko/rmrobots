@@ -13,7 +13,7 @@ class NetworkService {
     private init() {}
     static let shared = NetworkService()
     
-    func getData(url: URL, completion: @escaping (Any) -> ()) {
+    func getData(url: URL, completion: @escaping (Data) -> ()) {
         let session = URLSession.shared
         
         var request = URLRequest(url: url)
@@ -23,13 +23,7 @@ class NetworkService {
         session.dataTask(with: request) { (data, response, error) in
             guard let data = data else { return }
             
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: [])
-                
-                completion(json)
-            } catch {
-                print(error)
-            }
+            completion(data)
         }.resume()
     }
     
@@ -38,9 +32,15 @@ class NetworkService {
             return
         }
         
-        getData(url: url) { (json) in
-            let image = Image(json: json)
-            completion(image!)
+        getData(url: url) { (data) in
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+
+                let image = Image(json: json)
+                completion(image!)
+            } catch {
+                print(error)
+            }
         }
     }
     
@@ -57,5 +57,21 @@ class NetworkService {
                 completion(nil)
             }
         }.resume()
+    }
+    
+    func getCollections(completion: @escaping ([Collection]) -> ()) {
+        guard let url = URL(string: "https://api.unsplash.com/collections") else { return }
+        
+        getData(url: url) { (data) in
+            let decoder = JSONDecoder()
+            
+            do {
+                let collections = try decoder.decode([Collection].self, from: data)
+                
+                completion(collections)
+            } catch {
+                print(error)
+            }
+        }
     }
 }
