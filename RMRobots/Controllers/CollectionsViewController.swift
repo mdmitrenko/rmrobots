@@ -20,6 +20,15 @@ class CollectionsViewController: UIViewController {
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "collectionSegue" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let dvc = segue.destination as! CollectionViewController
+                dvc.collection = collections[indexPath.row]
+            }
+        }
+    }
 }
 
 extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate {

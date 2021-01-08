@@ -9,7 +9,7 @@ struct Collection: Codable {
     let id: String
     let title: String
     let totalPhotos: Int
-    let coverPhoto: CoverPhoto
+    let coverPhoto: Image
     
     
     enum CodingKeys: String, CodingKey {
@@ -17,20 +17,4 @@ struct Collection: Codable {
         case coverPhoto = "cover_photo"
         case id, title
     }
-}
-
-struct CoverPhoto: Codable {
-    let id: String
-    let width: Int
-    let height: Int
-    let color: String
-    let urls: Urls
-}
-
-struct Urls: Codable {
-    let raw: String
-    let full: String
-    let regular: String
-    let small: String
-    let thumb: String
 }

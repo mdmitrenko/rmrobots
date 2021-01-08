@@ -5,7 +5,6 @@
 //  Created by Maksim Dmitrenko on 18.12.2020.
 //
 
-import Foundation
 import UIKit
 
 class NetworkService {
@@ -22,22 +21,20 @@ class NetworkService {
         
         session.dataTask(with: request) { (data, response, error) in
             guard let data = data else { return }
-            
             completion(data)
         }.resume()
     }
     
     public func getRandomImage(completion: @escaping (Image) -> ()) {
-        guard  let url = URL(string: "https://api.unsplash.com/photos/random") else {
-            return
-        }
+        guard  let url = URL(string: API.randomPhoto) else { return }
         
         getData(url: url) { (data) in
+            let decoder = JSONDecoder()
+            
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: [])
-
-                let image = Image(json: json)
-                completion(image!)
+                let image = try decoder.decode(Image.self, from: data)
+                
+                completion(image)
             } catch {
                 print(error)
             }
@@ -60,7 +57,7 @@ class NetworkService {
     }
     
     func getCollections(completion: @escaping ([Collection]) -> ()) {
-        guard let url = URL(string: "https://api.unsplash.com/collections") else { return }
+        guard let url = URL(string: API.collections) else { return }
         
         getData(url: url) { (data) in
             let decoder = JSONDecoder()
@@ -69,6 +66,24 @@ class NetworkService {
                 let collections = try decoder.decode([Collection].self, from: data)
                 
                 completion(collections)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func getCollectionPhotos(collectionId: String, completion: @escaping ([Image]) -> ()) {
+        let urlString = API.collectionPhotos.replacingOccurrences(of: ":collectionId", with: "\(collectionId)")
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        getData(url: url) { (data) in
+            let decoder = JSONDecoder()
+            
+            do {
+                let photos = try decoder.decode([Image].self, from: data)
+                
+                completion(photos)
             } catch {
                 print(error)
             }
