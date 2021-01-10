@@ -8,26 +8,22 @@
 import UIKit
 
 class RandomImageViewController: UIViewController {
-    @IBOutlet weak var image: UIImageView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var imageView: CollectionImageView!
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
         
-        NetworkService.shared.getRandomImage() { (response) in
-            guard let url = URL(string: response.urls.regular) else { return }
+        NetworkService.shared.getRandomImage() { (image) in
+            DispatchQueue.main.sync {
+                self.activityIndicatorView.stopAnimating()
+            }
             
-            NetworkService.shared.loadImage(url: url) { [weak self] (image) in
-                if image !== nil {
-                    DispatchQueue.main.async {
-                        self?.image.image = image
-                        self?.view.backgroundColor = UIColor(hex: response.color) ?? UIColor.white
-                        self?.activityIndicator.stopAnimating()
-                    }
-                }
+            if let url = URL(string: image.urls.regular) {
+                self.imageView.loadImage(from: url)
             }
         }
     }

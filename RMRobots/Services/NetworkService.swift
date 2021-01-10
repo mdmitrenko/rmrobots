@@ -7,12 +7,14 @@
 
 import UIKit
 
+let imageCache = NSCache<AnyObject, AnyObject>()
+
 class NetworkService {
     
     private init() {}
     static let shared = NetworkService()
     
-    func getData(url: URL, completion: @escaping (Data) -> ()) {
+    func getData(from url: URL, completion: @escaping (Data) -> ()) {
         let session = URLSession.shared
         
         var request = URLRequest(url: url)
@@ -25,50 +27,31 @@ class NetworkService {
         }.resume()
     }
     
-    public func getRandomImage(completion: @escaping (Image) -> ()) {
-        guard  let url = URL(string: API.randomPhoto) else { return }
+    func decodeData<T>(_ data: Data, withType: T.Type, completion: (T) -> ()) where T : Decodable {
+        let decoder = JSONDecoder()
         
-        getData(url: url) { (data) in
-            let decoder = JSONDecoder()
+        do {
+            let result = try decoder.decode(T.self, from: data)
             
-            do {
-                let image = try decoder.decode(Image.self, from: data)
-                
-                completion(image)
-            } catch {
-                print(error)
-            }
+            completion(result)
+        } catch {
+            print(error)
         }
     }
     
-    func loadImage(url: URL, completion: @escaping (UIImage?) -> ()) {
-        let session = URLSession.shared
+    func getRandomImage(completion: @escaping (Image) -> ()) {
+        guard  let url = URL(string: API.randomPhoto) else { return }
         
-        session.dataTask(with: url) { (data, response, error) in
-            if let data = data,
-               let image = UIImage(data: data) {
-                
-                completion(image)
-            }
-            else {
-                completion(nil)
-            }
-        }.resume()
+        getData(from: url) { (data) in
+            self.decodeData(data, withType: Image.self, completion: completion)
+        }
     }
     
     func getCollections(completion: @escaping ([Collection]) -> ()) {
         guard let url = URL(string: API.collections) else { return }
         
-        getData(url: url) { (data) in
-            let decoder = JSONDecoder()
-            
-            do {
-                let collections = try decoder.decode([Collection].self, from: data)
-                
-                completion(collections)
-            } catch {
-                print(error)
-            }
+        getData(from: url) { (data) in
+            self.decodeData(data, withType: [Collection].self, completion: completion)
         }
     }
     
@@ -77,16 +60,29 @@ class NetworkService {
         
         guard let url = URL(string: urlString) else { return }
         
-        getData(url: url) { (data) in
-            let decoder = JSONDecoder()
-            
-            do {
-                let photos = try decoder.decode([Image].self, from: data)
-                
-                completion(photos)
-            } catch {
-                print(error)
+        getData(from: url) { (data) in
+            self.decodeData(data, withType: [Image].self, completion: completion)
+        }
+    }
+    
+    func loadImage(from url: URL, completion: @escaping (UIImage?) -> ()) -> URLSessionTask? {
+        
+        if let imageFromCache = imageCache.object(forKey: url.absoluteString as AnyObject) as? UIImage {
+            completion(imageFromCache)
+            return nil
+        }
+        
+        return URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data,
+                  let newImage = UIImage(data: data)
+            else {
+                print("Couldn't load image from url: \(url)")
+                return
             }
+            
+            imageCache.setObject(newImage, forKey: url.absoluteString as AnyObject)
+           
+            completion(newImage)
         }
     }
 }

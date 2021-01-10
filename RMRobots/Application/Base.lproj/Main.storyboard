@@ -19,10 +19,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="74c-Td-Fw7">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="74c-Td-Fw7" customClass="CollectionImageView" customModule="RMRobots" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="tzS-Ua-9rq">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="jXx-Zq-iFC">
                                 <rect key="frame" x="197" y="418.5" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
@@ -31,16 +31,16 @@
                         <constraints>
                             <constraint firstItem="74c-Td-Fw7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="30I-gB-ASl"/>
                             <constraint firstItem="74c-Td-Fw7" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="CQ8-Jt-M2T"/>
+                            <constraint firstItem="jXx-Zq-iFC" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="DiA-s5-Bjt"/>
+                            <constraint firstItem="jXx-Zq-iFC" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Hf0-mw-06c"/>
                             <constraint firstItem="74c-Td-Fw7" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="NIB-wB-vgn"/>
                             <constraint firstItem="74c-Td-Fw7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TaE-0U-ag9"/>
-                            <constraint firstItem="tzS-Ua-9rq" firstAttribute="centerY" secondItem="74c-Td-Fw7" secondAttribute="centerY" id="ag1-Xv-krB"/>
-                            <constraint firstItem="tzS-Ua-9rq" firstAttribute="centerX" secondItem="74c-Td-Fw7" secondAttribute="centerX" id="s4M-Pv-b5A"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Random" id="M4M-EL-lk4"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="tzS-Ua-9rq" id="Ecm-6L-OYR"/>
-                        <outlet property="image" destination="74c-Td-Fw7" id="Sov-ha-zyX"/>
+                        <outlet property="activityIndicatorView" destination="jXx-Zq-iFC" id="tRK-0d-gB9"/>
+                        <outlet property="imageView" destination="74c-Td-Fw7" id="2fF-sI-kCZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -85,7 +85,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="85"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e4C-ps-gi6" customClass="CollectionCoverImageView" customModule="RMRobots" customModuleProvider="target">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e4C-ps-gi6" customClass="CollectionImageView" customModule="RMRobots" customModuleProvider="target">
                                                     <rect key="frame" x="5" y="5" width="75" height="75"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="e4C-ps-gi6" secondAttribute="height" multiplier="1:1" id="EOs-Y9-uOc"/>
@@ -117,7 +117,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="coverImageView" destination="e4C-ps-gi6" id="Hg1-Pm-e6U"/>
+                                            <outlet property="coverImageView" destination="e4C-ps-gi6" id="Ge2-mH-ZJ6"/>
                                             <outlet property="photoCountLabel" destination="0eA-Hs-AqU" id="UaN-LU-mw4"/>
                                             <outlet property="titleLabel" destination="o3x-d9-82S" id="IVu-t4-Vwe"/>
                                             <segue destination="IXO-h8-rJ5" kind="show" identifier="collectionSegue" id="S4h-ia-1rN"/>
@@ -166,27 +166,27 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCell" id="COK-K7-Qfe" customClass="PhotoCollectionViewCell" customModule="RMRobots" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="collectionCell" id="1fN-SP-i0f" customClass="PhotoCollectionViewCell" customModule="RMRobots" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="VMc-bA-msI">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="f1C-gm-GT2">
                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="prR-N9-bBa" customClass="CollectionCoverImageView" customModule="RMRobots" customModuleProvider="target">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Igy-0A-TFl" customClass="CollectionImageView" customModule="RMRobots" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="prR-N9-bBa" firstAttribute="leading" secondItem="VMc-bA-msI" secondAttribute="leading" id="TE7-bc-4r7"/>
-                                                <constraint firstItem="prR-N9-bBa" firstAttribute="width" secondItem="VMc-bA-msI" secondAttribute="width" id="ZL6-N3-MCB"/>
-                                                <constraint firstItem="prR-N9-bBa" firstAttribute="height" secondItem="VMc-bA-msI" secondAttribute="height" id="aP8-16-I1j"/>
-                                                <constraint firstItem="prR-N9-bBa" firstAttribute="top" secondItem="VMc-bA-msI" secondAttribute="top" id="jig-sB-lbQ"/>
+                                                <constraint firstItem="Igy-0A-TFl" firstAttribute="width" secondItem="f1C-gm-GT2" secondAttribute="width" id="7Cx-4h-1EY"/>
+                                                <constraint firstItem="Igy-0A-TFl" firstAttribute="leading" secondItem="f1C-gm-GT2" secondAttribute="leading" id="K7s-Zy-w0w"/>
+                                                <constraint firstItem="Igy-0A-TFl" firstAttribute="height" secondItem="f1C-gm-GT2" secondAttribute="height" id="sT9-EC-Q9j"/>
+                                                <constraint firstItem="Igy-0A-TFl" firstAttribute="top" secondItem="f1C-gm-GT2" secondAttribute="top" id="wLH-IG-z30"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
-                                            <outlet property="photoImageView" destination="prR-N9-bBa" id="bNd-rZ-ngt"/>
-                                            <segue destination="Uj7-MY-EbP" kind="show" identifier="photoSegue" id="6RL-UI-ewl"/>
+                                            <outlet property="photoImageView" destination="Igy-0A-TFl" id="j8M-Ui-ezq"/>
+                                            <segue destination="Uj7-MY-EbP" kind="show" identifier="photoSegue" id="ez8-Dj-1cT"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -212,7 +212,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rVp-uo-jys" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3494" y="-328"/>
+            <point key="canvasLocation" x="3492.753623188406" y="-328.125"/>
         </scene>
         <!--Photo View Controller-->
         <scene sceneID="rcL-fQ-Hd8">
@@ -222,20 +222,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="d9g-XX-5af" customClass="CollectionCoverImageView" customModule="RMRobots" customModuleProvider="target">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="d9g-XX-5af" customClass="CollectionImageView" customModule="RMRobots" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="414"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="d9g-XX-5af" secondAttribute="height" multiplier="1:1" id="0DU-6Y-Clj"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Width" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z5Z-DC-yc6">
-                                <rect key="frame" x="20" y="507" width="41" height="18"/>
+                                <rect key="frame" x="20" y="507" width="211" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" systemColor="systemGrayColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Height" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="brg-9I-sus">
-                                <rect key="frame" x="20" y="530" width="45.5" height="18"/>
+                                <rect key="frame" x="20" y="530" width="211" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" systemColor="systemGrayColor"/>
                                 <nil key="highlightedColor"/>
@@ -264,6 +264,7 @@
                         <viewLayoutGuide key="safeArea" id="vrx-S7-86L"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Mvz-Eo-80I" firstAttribute="leading" secondItem="Z5Z-DC-yc6" secondAttribute="trailing" constant="7.5" id="2Mb-Yk-HvI"/>
                             <constraint firstItem="vrx-S7-86L" firstAttribute="trailing" secondItem="Mvz-Eo-80I" secondAttribute="trailing" constant="10" id="GCc-3G-xXu"/>
                             <constraint firstItem="d9g-XX-5af" firstAttribute="top" secondItem="vrx-S7-86L" secondAttribute="top" id="J77-AY-2i6"/>
                             <constraint firstItem="Z5Z-DC-yc6" firstAttribute="leading" secondItem="vrx-S7-86L" secondAttribute="leading" constant="20" id="Jt0-TG-Jnl"/>
@@ -276,6 +277,7 @@
                             <constraint firstItem="d9g-XX-5af" firstAttribute="leading" secondItem="vrx-S7-86L" secondAttribute="leading" id="gRO-bK-pAf"/>
                             <constraint firstItem="p1r-dc-6gg" firstAttribute="top" secondItem="brg-9I-sus" secondAttribute="bottom" constant="10" id="kOG-tl-eu5"/>
                             <constraint firstItem="p1r-dc-6gg" firstAttribute="top" secondItem="Mvz-Eo-80I" secondAttribute="bottom" constant="10" id="nYd-MD-erp"/>
+                            <constraint firstItem="Mvz-Eo-80I" firstAttribute="leading" secondItem="brg-9I-sus" secondAttribute="trailing" constant="7.5" id="niC-V5-GWo"/>
                             <constraint firstItem="Mvz-Eo-80I" firstAttribute="top" secondItem="d9g-XX-5af" secondAttribute="bottom" constant="5" id="pkS-jI-3tj"/>
                             <constraint firstItem="p1r-dc-6gg" firstAttribute="leading" secondItem="vrx-S7-86L" secondAttribute="leading" constant="10" id="y2q-n0-Hnk"/>
                             <constraint firstItem="Z5Z-DC-yc6" firstAttribute="top" secondItem="d9g-XX-5af" secondAttribute="bottom" constant="5" id="ypb-4F-ETM"/>
@@ -285,7 +287,7 @@
                     <connections>
                         <outlet property="descriptionTextView" destination="p1r-dc-6gg" id="FUr-bu-Of5"/>
                         <outlet property="heightLabel" destination="brg-9I-sus" id="GI6-UZ-ZxV"/>
-                        <outlet property="photoImageView" destination="d9g-XX-5af" id="yr2-mX-Jq8"/>
+                        <outlet property="photoImageView" destination="d9g-XX-5af" id="SaT-MJ-EtW"/>
                         <outlet property="widthLabel" destination="Z5Z-DC-yc6" id="YCh-DU-9DS"/>
                     </connections>
                 </viewController>

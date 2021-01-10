@@ -34,7 +34,7 @@ class CollectionViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension CollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionPhotos.count
     }

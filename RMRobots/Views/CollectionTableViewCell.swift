@@ -8,7 +8,7 @@
 import UIKit
 
 class CollectionTableViewCell: UITableViewCell {
-    @IBOutlet weak var coverImageView: CollectionCoverImageView!
+    @IBOutlet weak var coverImageView: CollectionImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var photoCountLabel: UILabel!
 }

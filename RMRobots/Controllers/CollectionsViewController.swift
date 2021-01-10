@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - UIViewController
 class CollectionsViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     
@@ -31,6 +32,7 @@ class CollectionsViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return collections.count
@@ -38,11 +40,14 @@ extension CollectionsViewController: UITableViewDataSource, UITableViewDelegate 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CollectionTableViewCell
+        
         cell.titleLabel?.text = collections[indexPath.row].title
         cell.photoCountLabel?.text = "Photos: \(collections[indexPath.row].totalPhotos)"
+        
         if let url = URL(string: collections[indexPath.row].coverPhoto.urls.thumb) {
             cell.coverImageView.loadImage(from: url)
         }
+        
         return cell
     }
     

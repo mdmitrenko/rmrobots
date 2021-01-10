@@ -17,6 +17,7 @@ struct Environment {
         guard let value = processInfo.environment[name] else {
             return nil
         }
+        
         return value
     }
 }
