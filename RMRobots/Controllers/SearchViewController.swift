@@ -1,17 +1,16 @@
 //
-//  CollectionViewController.swift
+//  SearchViewController.swift
 //  RMRobots
 //
-//  Created by Maksim Dmitrenko on 07.01.2021.
+//  Created by Maksim Dmitrenko on 11.01.2021.
 //
 
 import UIKit
 
 // MARK: - UIViewController
-class CollectionViewController: UIViewController {
+class SearchViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var collection: Collection!
     var collectionPhotos = [Image]()
     
     override func viewDidLoad() {
@@ -20,17 +19,13 @@ class CollectionViewController: UIViewController {
         let nibCell = UINib(nibName: PhotoCollectionViewCell.identifier, bundle: nil)
         collectionView.register(nibCell, forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
         
-        NetworkService.shared.getCollectionPhotos(collectionId: collection.id) { [weak self] (photos) in
-            DispatchQueue.main.async {
-                self?.collectionPhotos = photos
-                self?.collectionView.reloadData()
-            }
-        }
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+            layout.estimatedItemSize = .zero
     }
 }
 
 // MARK: - UICollectionViewDataSource
-extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension SearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionPhotos.count
     }
@@ -45,6 +40,12 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let searchView: UICollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "searchBar", for: indexPath)
+
+        return searchView
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let dvc = storyboard?.instantiateViewController(withIdentifier: PhotoViewController.identifier) as? PhotoViewController else { return }
         dvc.photo = collectionPhotos[indexPath.row]
@@ -53,7 +54,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension CollectionViewController: UICollectionViewDelegateFlowLayout {
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: (view.frame.size.width - 2 - 4) / 3, height: (view.frame.size.width - 2 - 4) / 3)
     }
@@ -68,5 +69,17 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension SearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        NetworkService.shared.searchPhotos(str: searchBar.text!.lowercased()) { (searchResult) in
+            DispatchQueue.main.async {
+                self.collectionPhotos = searchResult.results
+                self.collectionView.reloadData()
+            }
+        }
     }
 }

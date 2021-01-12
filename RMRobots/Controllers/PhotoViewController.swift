@@ -13,6 +13,8 @@ class PhotoViewController: UIViewController {
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var descriptionTextView: UITextView!
     
+    static let identifier = "PhotoViewController"
+    
     @IBAction func photoLinkClicked(_ sender: Any) {
         openUrl(urlStr: photo.urls.full)
     }

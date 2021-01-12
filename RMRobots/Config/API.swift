@@ -9,4 +9,5 @@ struct API {
     static let randomPhoto = "\(Environment.apiHost)/photos/random"
     static let collections = "\(Environment.apiHost)/collections"
     static let collectionPhotos = "\(Environment.apiHost)/collections/:collectionId/photos"
+    static let searchPhotos = "\(Environment.apiHost)/search/photos"
 }

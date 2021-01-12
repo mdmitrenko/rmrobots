@@ -65,6 +65,16 @@ class NetworkService {
         }
     }
     
+    func searchPhotos(str: String, completion: @escaping (SearchResult) -> ()) {
+        let urlString = API.searchPhotos + "?query=\(str)"
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        getData(from: url) { (data) in
+            self.decodeData(data, withType: SearchResult.self, completion: completion)
+        }
+    }
+    
     func loadImage(from url: URL, completion: @escaping (UIImage?) -> ()) -> URLSessionTask? {
         
         if let imageFromCache = imageCache.object(forKey: url.absoluteString as AnyObject) as? UIImage {

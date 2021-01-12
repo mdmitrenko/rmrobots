@@ -9,4 +9,10 @@ import UIKit
 
 class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var photoImageView: CollectionImageView!
+    
+    static let identifier = "PhotoCollectionViewCell"
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 }
