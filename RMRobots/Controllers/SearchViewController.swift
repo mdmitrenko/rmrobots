@@ -11,6 +11,13 @@ import UIKit
 class SearchViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
+    weak var spinner: UIActivityIndicatorView?
+    
+    private var isLoading = false
+    private var page = 0
+    private var totalPages = 0
+    private var searchQuery = ""
+    
     var collectionPhotos = [Image]()
     
     override func viewDidLoad() {
@@ -19,8 +26,37 @@ class SearchViewController: UIViewController {
         let nibCell = UINib(nibName: PhotoCollectionViewCell.identifier, bundle: nil)
         collectionView.register(nibCell, forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
         
-        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            layout.estimatedItemSize = .zero
+        collectionView.register(FooterCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterCollectionReusableView.identifier)
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > collectionView.contentSize.height - scrollView.frame.size.height + 50 {
+            if !isLoading {
+                loadNextPage()
+            }
+        }
+    }
+    
+    private func loadNextPage() {
+        guard page < totalPages || totalPages == 0 else { return }
+        
+        isLoading = true
+        self.spinner?.startAnimating()
+        
+        page += 1
+        isLoading = true
+        NetworkService.shared.searchPhotos(str: self.searchQuery, page: self.page) { (searchResult) in
+            self.isLoading = false
+            self.totalPages = searchResult.totalPages
+            DispatchQueue.main.async {
+                self.spinner?.stopAnimating()
+                self.collectionPhotos.append(contentsOf: searchResult.results)
+                self.collectionView.reloadData()
+            }
+        }
     }
 }
 
@@ -41,9 +77,19 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let searchView: UICollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "searchBar", for: indexPath)
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: FooterCollectionReusableView.identifier, for: indexPath) as! FooterCollectionReusableView
+            
+            self.spinner = footerView.spinner
+            
+            return footerView
+        } else if kind == UICollectionView.elementKindSectionHeader {
+            let searchView: UICollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "searchBar", for: indexPath)
 
-        return searchView
+            return searchView
+        }
+        
+        return UICollectionReusableView()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -75,11 +121,10 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UISearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        NetworkService.shared.searchPhotos(str: searchBar.text!.lowercased()) { (searchResult) in
-            DispatchQueue.main.async {
-                self.collectionPhotos = searchResult.results
-                self.collectionView.reloadData()
-            }
-        }
+        searchQuery = searchBar.text!.lowercased()
+        page = 0
+        totalPages = 0
+        
+        loadNextPage()
     }
 }

@@ -47,30 +47,44 @@ class NetworkService {
         }
     }
     
-    func getCollections(completion: @escaping ([Collection]) -> ()) {
-        guard let url = URL(string: API.collections) else { return }
+    func getCollections(page: Int, completion: @escaping ([Collection]) -> ()) {
+        guard var url = URLComponents(string: API.collections) else { return }
         
-        getData(from: url) { (data) in
+        url.queryItems = [
+            URLQueryItem(name: "per_page", value: "20"),
+            URLQueryItem(name: "page", value: "\(page)")
+        ]
+        
+        getData(from: url.url!) { (data) in
             self.decodeData(data, withType: [Collection].self, completion: completion)
         }
     }
     
-    func getCollectionPhotos(collectionId: String, completion: @escaping ([Image]) -> ()) {
+    func getCollectionPhotos(collectionId: String, page: Int, completion: @escaping ([Image]) -> ()) {
         let urlString = API.collectionPhotos.replacingOccurrences(of: ":collectionId", with: "\(collectionId)")
         
-        guard let url = URL(string: urlString) else { return }
+        guard var url = URLComponents(string: urlString) else { return }
         
-        getData(from: url) { (data) in
+        url.queryItems = [
+            URLQueryItem(name: "per_page", value: "21"),
+            URLQueryItem(name: "page", value: "\(page)")
+        ]
+        
+        getData(from: url.url!) { (data) in
             self.decodeData(data, withType: [Image].self, completion: completion)
         }
     }
     
-    func searchPhotos(str: String, completion: @escaping (SearchResult) -> ()) {
-        let urlString = API.searchPhotos + "?query=\(str)"
+    func searchPhotos(str: String, page: Int, completion: @escaping (SearchResult) -> ()) {
+        guard var url = URLComponents(string: API.searchPhotos) else { return }
         
-        guard let url = URL(string: urlString) else { return }
+        url.queryItems = [
+            URLQueryItem(name: "per_page", value: "21"),
+            URLQueryItem(name: "page", value: "\(page)"),
+            URLQueryItem(name: "query", value: "\(str)")
+        ]
         
-        getData(from: url) { (data) in
+        getData(from: url.url!) { (data) in
             self.decodeData(data, withType: SearchResult.self, completion: completion)
         }
     }

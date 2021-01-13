@@ -11,6 +11,11 @@ import UIKit
 class CollectionViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
+    weak var spinner: UIActivityIndicatorView?
+    
+    private var isLoading = false
+    private var page = 0
+    
     var collection: Collection!
     var collectionPhotos = [Image]()
     
@@ -20,9 +25,35 @@ class CollectionViewController: UIViewController {
         let nibCell = UINib(nibName: PhotoCollectionViewCell.identifier, bundle: nil)
         collectionView.register(nibCell, forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
         
-        NetworkService.shared.getCollectionPhotos(collectionId: collection.id) { [weak self] (photos) in
+        collectionView.register(FooterCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterCollectionReusableView.identifier)
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50)
+        
+        loadNextPage()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > collectionView.contentSize.height - scrollView.frame.size.height + 50 {
+            if !isLoading {
+                loadNextPage()
+            }
+        }
+    }
+    
+    private func loadNextPage() {
+        guard collectionPhotos.count < collection.totalPhotos else { return }
+        
+        isLoading = true
+        self.spinner?.startAnimating()
+        
+        page += 1
+        isLoading = true
+        NetworkService.shared.getCollectionPhotos(collectionId: self.collection.id, page: self.page) { [weak self] (photos) in
+            self?.isLoading = false
             DispatchQueue.main.async {
-                self?.collectionPhotos = photos
+                self?.spinner?.stopAnimating()
+                self?.collectionPhotos.append(contentsOf: photos)
                 self?.collectionView.reloadData()
             }
         }
@@ -49,6 +80,18 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         guard let dvc = storyboard?.instantiateViewController(withIdentifier: PhotoViewController.identifier) as? PhotoViewController else { return }
         dvc.photo = collectionPhotos[indexPath.row]
         self.navigationController?.pushViewController(dvc, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: FooterCollectionReusableView.identifier, for: indexPath) as! FooterCollectionReusableView
+            
+            self.spinner = footerView.spinner
+            
+            return footerView
+        }
+        
+        return UICollectionReusableView()
     }
 }
 
