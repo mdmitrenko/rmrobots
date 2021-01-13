@@ -36,7 +36,7 @@
                             <constraint firstItem="74c-Td-Fw7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TaE-0U-ag9"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Random" id="M4M-EL-lk4"/>
+                    <tabBarItem key="tabBarItem" title="Random" image="random" id="M4M-EL-lk4"/>
                     <connections>
                         <outlet property="activityIndicatorView" destination="jXx-Zq-iFC" id="tRK-0d-gB9"/>
                         <outlet property="imageView" destination="74c-Td-Fw7" id="2fF-sI-kCZ"/>
@@ -275,7 +275,7 @@
         <scene sceneID="9g1-Zq-QDi">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WLv-qK-DT0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Collections" id="SGA-fK-wxE"/>
+                    <tabBarItem key="tabBarItem" title="Collections" image="picture" id="SGA-fK-wxE"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6V9-K7-Ffn">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -294,7 +294,7 @@
         <scene sceneID="MG5-FR-Sb5">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YNq-2f-ylW" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Search" id="EcZ-Tl-kyb"/>
+                    <tabBarItem key="tabBarItem" title="Search" image="search" id="EcZ-Tl-kyb"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="AP6-1h-JQv">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -376,6 +376,9 @@
     </scenes>
     <resources>
         <image name="link" catalog="system" width="128" height="122"/>
+        <image name="picture" width="25" height="25"/>
+        <image name="random" width="25" height="25"/>
+        <image name="search" width="25" height="25"/>
         <namedColor name="AccentColor">
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
